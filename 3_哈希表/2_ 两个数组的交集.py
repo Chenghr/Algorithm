@@ -33,6 +33,7 @@ class Solution:
 
 # 相关知识:
 """collections.defaultdict类的介绍：
+https://blog.csdn.net/qq_39478403/article/details/105746952
 
 使用普通的字典时，用法一般是dict={},添加元素的只需要dict[element] =value，
 调用的时候也是如此，dict[element] = xxx,但前提是element字典里，如果不在字典里就会报错；
