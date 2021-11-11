@@ -18,4 +18,20 @@ https://leetcode-cn.com/problems/4sum-ii/
 
 class Solution:
     def fourSumCount(self, nums1: list[int], nums2: list[int], nums3: list[int], nums4: list[int]) -> int:
-        pass
+        record = dict()
+
+        # 记录，O(n^2)
+        for val1 in nums3:
+            for val2 in nums4:
+                if val1+val2 not in record:
+                    record[val1+val2] = 1
+                else:
+                    record[val1+val2] += 1
+        
+        count = 0
+        for val1 in nums1:
+            for val2 in nums2:
+                if -(val1+val2) in record:
+                    count += record[-(val1+val2)]
+
+        return count
