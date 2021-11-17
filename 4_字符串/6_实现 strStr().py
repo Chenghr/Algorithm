@@ -23,8 +23,12 @@
     1. 暴力匹配，O(M * N) 时间开销；
 
     2. KMP算法，O(N) 时间开销；
+        https://programmercarl.com/0028.实现strStr.html
         https://blog.csdn.net/v_JULY_v/article/details/7041827
 """
+
+from typing_extensions import ParamSpecArgs
+
 
 class Solution:
     # def strStr(self, haystack: str, needle: str) -> int:
@@ -52,53 +56,112 @@ class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
         # KMP算法
         
+        def getNextV1(pattern: str) -> list:
+            """求解 next 数组
+
+            前缀表，代表当前字符之前的字符串中，最长相同前后缀。
+            next 数组等于前缀表
+            """
+            next = [0] * len(pattern)
+
+            # 初始化，j 指向前缀末尾位置
+            next[0] = 0  
+            j = 0
+
+            # i 指向后缀末尾位置，不回退，注意下标从 1 开始
+            for i in range(1, len(pattern)):
+
+                # 处理前后缀不相同的情况
+                while (j > 0 and pattern[i] != pattern[j]):
+                    # j 保证大于0，避免下标越界
+                    j = next[j-1]  # 向前回退，找前一位的对应的回退位置
+                
+                if pattern[i] == pattern[j]:
+                    # 找到相同的前后缀
+                    j += 1
+
+                # 将 j（前缀的长度）赋给next[i]
+                next[i] = j
+            
+            return next
+        
+        def kmpSearchV1(text: str, pattern: str) -> int:
+            if len(pattern) == 0:
+                return 0
+            
+            # next数组即为前缀表
+            next = getNextV1(pattern)
+
+            j = 0  # 指向模式串的指针
+
+            for i in range(len(text)):
+
+                # 当前字符不匹配，持续回退，要么找到一个匹配的，要么回到起点从头匹配
+                while j > 0 and text[i] != pattern[j]:
+                    j = next[j-1]
+
+                # 当前字符匹配
+                if text[i] == pattern[j]:
+                    j += 1
+                
+                # 匹配成功
+                if j == len(pattern):
+                    return i-len(pattern)+1
+
+            # 匹配失败
+            return -1
+
+
         def getNext(pattern: str) -> list:
             """求解 next 数组
 
-            next: 代表当前字符之前的字符串中，有多大长度的相同前缀后缀。
-                  例如如果next [j] = k，代表 j 之前的字符串中有最大长度为 k 的相同前缀后缀
-
-            在某个字符失配时，该字符对应的 next 值会告诉你下一步匹配中，模式串应该跳到哪个位置（跳到 next[j] 的位置）。
-            如果 next[j] 等于0或-1，则跳到模式串的开头字符，
-            若 next[j] = k 且 k > 0，代表下次匹配跳到j 之前的某个字符，而不是跳到开头，且具体跳过了 k 个字符
-
-            next 数组的求解：就是找最大对称长度的前缀后缀，然后整体右移一位，初值赋为-1
+            next 数组的求解：求解出前缀表，然后整体右移一位，初始值补0，然后减1
             """
             next = [0] * len(pattern)
-            next[0] = -1
-            j, k = 0, -1
 
-            while (j < len(pattern)-1):
-                if k == -1 or pattern[j] == pattern[k]:
-                    k += 1
+            # 初始化，j 指向前缀起始位置
+            next[0] = -1  
+            j = -1  
+
+            # i 指向后缀起始位置，不回退，注意下标从 1 开始
+            for i in range(1, len(pattern)):
+
+                # 处理前后缀不相同的情况
+                # 注意 next 数组为前缀表整体右移一位，因此为 pattern
+                while (j >= 0 and pattern[i] != pattern[j+1]):
+                    j = next[j]  # 向前回退，直到起点
+                
+                if pattern[i] == pattern[j+1]:
+                    # 找到相同的前后缀
                     j += 1
-                    next[j] = k
-                else:
-                    # 第j个字符和第k个字符不匹配时，
-                    k = next[k]
+
+                next[i] = j
             
             return next
 
-        if len(needle) == 0:
-            return 0
-        if len(haystack) < len(needle):
+        def kmpSearch(text: str, pattern: str) -> int:
+            if len(pattern) == 0:
+                return 0
+
+            next = getNext(pattern)
+
+            j = -1  # next数组里记录的起始位置为-1
+
+            # 注意这里开始下标为0
+            for i in range(len(text)):
+                while j >=0 and text[i] != pattern[j+1]:
+                    # 不匹配，j 向前回退
+                    j = next[j] 
+                
+                if text[i] == pattern[j+1]:
+                    # 当前字符匹配，i 和 j 同时向后移动，i 的移动在 for 循环内
+                    j += 1
+                
+                if j == len(pattern)-1:
+                    # 字符串匹配
+                    return i-len(pattern)+1
+                
             return -1
-            
-        next = getNext(needle)
 
-        i, j = 0, 0
-
-        while (i < len(haystack) and j < len(needle)):
-            if j == -1 or haystack[i] == needle[j]:
-                i += 1
-                j += 1
-            else:
-                j = next[j]
-        
-        if j == len(needle):
-            return i-j
-        
-        return -1
-
-            
-            
+        index = kmpSearch(haystack, needle)   
+        return index
