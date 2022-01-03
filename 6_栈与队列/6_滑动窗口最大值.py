@@ -40,6 +40,7 @@
                 采用 collections.deque 实现;
 
                 一些关于时间复杂的分析的博客:
+                https://www.cnblogs.com/Nicholas0707/p/13040246.html
                 https://blog.csdn.net/qq_28304687/article/details/79088491
 """
 
