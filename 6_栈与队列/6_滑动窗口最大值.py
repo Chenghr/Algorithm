@@ -38,9 +38,8 @@
             d. 实现:
                 采用 list 实现; (list.pop()的时间复杂度为 O(n))
                 采用 collections.deque 实现;
-
-
 """
+
 from collections import deque
 
 class MyQueue_list:
