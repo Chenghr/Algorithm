@@ -35,13 +35,13 @@
             使用基于快速排序的方法，求出「出现次数数组」的前 k 大的值。
             
             - 快排步骤
-                a. 随机选一个中间值作为基准，并把它挪到最左侧;
-                b. 从第2个元素开始遍历，遍历过程中，要把比基准大的挪到左边，比基准小的挪到右边;
-                c. i 指向比基准大的元素，只要 j 指向的元素比基准小，就把 j 位置的元素和i后面一个位置的元素对调
-                   并且i后移一位，这样 i 指向的元素以及 i 之前的元素都是比基准大的元素(基准本身除外);
-                d. j遍历到末尾后，此时i指向的就是排序后的列表中比基准大的最后一个元素，将该元素和基准对调，即
-                   num_cnt[low], num_cnt[i] = num_cnt[i], num_cnt[low]
-                排序后的列表就是在i位置前的都比 i 大，i 位置后的都比 i 小
+                a. 随机选一个中间值作为基准，将它与最左侧元素交换;
+                b. 从第 2 个元素开始遍历，遍历过程中，要把比基准大的挪到左边，比基准小的挪到右边;
+                c. i 指向比基准大的元素，只要 j 指向的元素比基准大，就把 j 位置的元素和 i 后面一个位置的元素对调
+                   并且 i 后移一位，这样 i 指向的元素以及 i 之前的元素都是比基准大的元素(基准本身除外);
+                d. j 遍历到末尾后，此时 i 指向的就是排序后的列表中比基准大的最后一个元素，将该元素和基准对调;
+
+                排序后的列表就是在 i 位置前的都比基准大，i 位置后的都比基准小
 
             - 分治
                 a. 如果 i == k - 1，也就是i及之前的元素恰好组成了我们想要的topK，直接返回前k个元素
@@ -53,6 +53,7 @@
 """
 from collections import defaultdict
 import heapq
+import random
 
 class Solution:
     def topKFrequent_naive(self, nums: list[int], k: int) -> list[int]:
@@ -110,13 +111,76 @@ class Solution:
             freq_num.append((freq, key))
         
         # 获取 topk 对应的元组
-        topKs = self._findTopK(self, freq_num, k, 0, len(freq_num)-1)
+        topKs = self._findTopK(freq_num, k, 0, len(freq_num)-1)
 
         # 获得结果
         result = [item[1] for item in topKs]  # 对顺序不敏感
 
+        return result
+    
     def _findTopK(self, freq_num, k, low, high):
-        pass
+        """
+        - 快排步骤
+                a. 随机选一个中间值作为基准，将它与最左侧元素交换;
+                b. 从第 2 个元素开始遍历，遍历过程中，要把比基准大的挪到左边，比基准小的挪到右边;
+                c. i 指向比基准大的元素，只要 j 指向的元素比基准大，就把 j 位置的元素和 i 后面一个位置的元素对调
+                   并且 i 后移一位，这样 i 指向的元素以及 i 之前的元素都是比基准大的元素(基准本身除外);
+                d. j 遍历到末尾后，此时 i 指向的就是排序后的列表中比基准大的最后一个元素，将该元素和基准对调;
+
+                排序后的列表就是在 i 位置前的都比基准大，i 位置后的都比基准小
+        """
+        # 选择基准点
+        pivot = random.randint(low, high)
+        freq_num[low], freq_num[pivot] = freq_num[pivot], freq_num[low]
+
+        i = low
+        for j in range(low+1, high+1):
+            if freq_num[j][0] > freq_num[low][0]:
+                freq_num[i+1], freq_num[j] = freq_num[j], freq_num[i+1]
+                i += 1
+                # 这里 j 不用做位置变化，j 大于 i，等于已经确认 i+1 位置的元素小于基准
+        
+        freq_num[low], freq_num[i] = freq_num[i], freq_num[low]\
+        
+        # 分治
+        if i == k-1:
+            return freq_num[ : k]
+        elif i > k-1:
+            return self._findTopK(freq_num, k, low, i-1)
+        else:
+            return self._findTopK(freq_num, k, i+1, high)
+
+    def _findTopK_wrong(self, freq_num, k, low, high):
+        """基于快排的思想实现，降序排列
+        错误的实现方法，结果不稳定，有问题。。。
+        """
+        # 选择基准点
+        pivot = random.randint(low, high)
+        freq_num[low], freq_num[pivot] = freq_num[pivot], freq_num[low]
+
+        # 一趟快排
+        left, right = low+1, high
+        while left < right:
+
+            while freq_num[right][0] <= freq_num[low][0] and left < right:
+                right -= 1
+
+            while freq_num[left][0] >= freq_num[low][0] and left < right:
+                left += 1
+            
+            freq_num[left], freq_num[right] = freq_num[right], freq_num[left]
+            
+        # 使划分好的数分布在基数两侧
+        # 注意此处由于 left 增加了1，所以仅能保证 left-1 是大于基准值，因此与 left-1 交换
+        freq_num[low], freq_num[left-1] = freq_num[left-1], freq_num[low]
+
+        # 分治
+        if left == k:
+            return freq_num[ : k]
+        elif left > k-1:
+            return self._findTopK(freq_num, k, low, left-2)
+        else:
+            return self._findTopK(freq_num, k, left, high)
 
 if __name__ == '__main__':
     solution = Solution()
@@ -126,5 +190,6 @@ if __name__ == '__main__':
     # k = 1
     
     # result = solution.topKFrequent_naive(nums, k)
-    result = solution.topKFrequent_heap(nums, k)
+    # result = solution.topKFrequent_heap(nums, k)
+    result = solution.topKFrequent_quickSort(nums, k)
     print(result)
