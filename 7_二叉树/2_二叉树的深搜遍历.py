@@ -22,7 +22,7 @@
     使用标记法可以统一三种访问顺序的代码格式，值得记忆.
 """
 
-from typing import NoReturn, Optional, List, no_type_check_decorator
+from typing import Optional, List
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
