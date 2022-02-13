@@ -19,9 +19,9 @@ from typing import List
 class Solution:
     def findContentChildren(self, g: List[int], s: List[int]) -> int:
         """
-            采用贪心的思想，每个孩子只给恰大于他的饼干，如果没有则不给；
-
-            对胃口值和饼干尺寸分别排序，再加一个标记数组
+            贪心策略:
+                局部最优: 大饼干喂给胃口大的，充分利用饼干尺寸喂饱一个;
+                全局最优: 喂饱尽可能多的小孩。
         """
         g.sort()
         s.sort()
