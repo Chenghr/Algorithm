@@ -42,16 +42,17 @@ class Solution:
             right = traversal(root.right)  # 右
 
             # 中，本层处理逻辑
+            # 三层 if 的判断顺序不能错
             if left == 2 and right == 2:
                 return 0
-            if left == 1 or right == 1:
-                return 2
-            if left == 0 or right == 0:
+            elif left == 0 or right == 0:
                 # 安装摄像头
                 nonlocal result
                 result += 1
                 return 1    
-            
+            elif left == 1 or right == 1:
+                return 2
+
             return -1
 
         if traversal(root) == 0:
