@@ -30,7 +30,7 @@ def wei_bag_01_problem(bag_size, weight, value) -> int:
         4. 遍历顺序:
             先遍历物品，即 i；再遍历背包容量 j.
     """
-    dp = [[0] * (bag_size+1)] * len(weight)
+    dp = [[0] * (bag_size+1) for _ in range(len(weight))]
 
     # 初始化
     for j in range(bag_size+1):
@@ -78,7 +78,7 @@ def wei_bag_01_problem(bag_size, weight, value) -> int:
     # 假设价值非负，因此初始化均为0即可
 
     for i in range(len(weight)):
-        for j in range(bag_size+1, weight[i]-1, -1):
+        for j in range(bag_size, weight[i]-1, -1):
             # 保证数组的下标非负
             dp[j] = max(dp[j], dp[j-weight[i]] + value[i])
 
