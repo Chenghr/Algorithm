@@ -54,6 +54,5 @@ class Solution:
         
 
 example = Solution()
-
 result = example.canPartition([2,2,1,1])
 print(result)
