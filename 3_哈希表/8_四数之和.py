@@ -1,32 +1,34 @@
 """
-给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。
-请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] （若两个四元组元素一一对应，则认为两个四元组重复）：
-    0 <= a, b, c, d < n
-    a、b、c 和 d 互不相同
-    nums[a] + nums[b] + nums[c] + nums[d] == target
+    题目描述:
+        给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。
+        请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] 
+        （若两个四元组元素一一对应，则认为两个四元组重复）:
+            0 <= a, b, c, d < n
+            a、b、c 和 d 互不相同
+            nums[a] + nums[b] + nums[c] + nums[d] == target
 
-你可以按 任意顺序 返回答案 。
+        你可以按 任意顺序 返回答案 。
 
-提示：
-    1 <= nums.length <= 200
-    -109 <= nums[i] <= 109
-    -109 <= target <= 109
+    提示:
+        1 <= nums.length <= 200
+        -109 <= nums[i] <= 109
+        -109 <= target <= 109
 
-https://leetcode-cn.com/problems/4sum/
+    链接: https://leetcode-cn.com/problems/4sum/
 """
 
 """
-思路分析:
+    思路分析:
 
-1. 暴力求解
-    四层 for 循环求解，时间复杂度 O(n^4)
+    1. 暴力求解
+        四层 for 循环求解，时间复杂度 O(n^4)
 
-2. 双指针法
-    先排序（便于去重），再使用双指针法，可以减少一次遍历，时间复杂度 O(n^3)
+    2. 双指针法
+        先排序（便于去重），再使用双指针法，可以减少一次遍历，时间复杂度 O(n^3)
 
-# 注意:
-    - 早停的条件不满足，break要删除
-    - 要对 idx1 和 idx2 均去重
+    # 注意:
+        - 早停的条件不满足，break要删除
+        - 要对 idx1 和 idx2 均去重
 """
 class Solution:
     def fourSum(self, nums: list[int], target: int) -> list[list[int]]:
