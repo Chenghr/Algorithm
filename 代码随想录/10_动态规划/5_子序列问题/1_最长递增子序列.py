@@ -35,6 +35,52 @@ class Solution:
     
     def lengthOfLIS(self, nums: List[int]) -> int:
         """
+            贪心 + 二分查找:
+            
+            贪心:
+                如果我们要使上升子序列尽可能的长，则我们需要让序列上升得尽可能慢，
+                因此我们希望每次在上升子序列最后加上的那个数尽可能的小。
+            
+            基于上述贪心思想，我们可以做出如下设计:
+                d[i] ，表示长度为 ii 的最长上升子序列的末尾元素的最小值；
+                用 len 记录目前最长上升子序列的长度，起始时 len 为 1，d[1]=nums[0]。
+
+                可以证明 d[i] 是单调递增的。
+                依次遍历数组 nums 中的每个元素，并更新数组 d 和 len 的值。
+
+            整体流程:
+                for num in nums:
+                    if num > d[len]:
+                        d[len + 1] = num, len += 1
+                    else:
+                        d 内二分查找，找到第一个比 num 小的数 d[k];
+                        d[k+1] = num
+        """
+        d = []
+
+        for n in nums:
+            if not d or n > d[-1]:
+                d.append(n)
+
+            else:
+                l, r = 0, len(d) - 1
+                loc = r
+
+                while l <= r:
+                    mid = (l + r) // 2
+
+                    if d[mid] >= n:
+                        loc = mid
+                        r = mid - 1
+                    else:
+                        l = mid + 1
+
+                d[loc] = n
+                
+        return len(d)
+
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        """
             纸牌游戏方法；
                 只能把点数小的牌压到点数比它大的牌上。
                 如果当前牌点数较大没有可以放置的堆，则新建一个堆，把这张牌放进去。
