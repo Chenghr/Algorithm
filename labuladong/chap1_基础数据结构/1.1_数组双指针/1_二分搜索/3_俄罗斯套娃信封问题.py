@@ -47,6 +47,49 @@ class Solution:
 
         return maxLength
     
+    def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
+        """
+           方法一的进一步优化:
+            1. 先对 envelopes 排序，对宽度升序排序，高度降序排序；
+                这样问题会完全转化为 高度的最长上升子序列问题（排除了宽度相同，高度大于前者的情况）；
+            
+            2. 由于信封量过大，因此要用 LIS 求解的 贪心+二分思想求解。
+                dp[i]: 表示长度为 i 的最长上升子序列的末尾元素的最小值；
+                且 dp[i] 内的元素均为 尽可能的小的数。
+        """ 
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
+
+        dp = []
+
+        for i in range(len(envelopes)):
+            
+            target = envelopes[i][1]
+
+            if len(dp) == 0 or dp[-1] < target:
+                dp.append(target)
+
+            else:
+                # 二分法寻找 dp 中 target 的左边界
+                left, right = 0, len(dp)
+
+                while left < right:
+                    mid = int((left + right) / 2)
+
+                    if dp[mid] == target:
+                        right = mid
+                    elif dp[mid] < target:
+                        left = mid + 1
+                    elif dp[mid] > target:
+                        right = mid
+
+                # 如果 dp 中不含有 target，那么最终 left 指向第一个大于 target 的值
+                dp[left] = target
+        
+        return len(dp)
+                
+
+
+    
 solution = Solution()
 result = solution.maxEnvelopes([[1,3],[3,5],[6,7],[6,8],[8,4],[9,5]])
 print(result)
