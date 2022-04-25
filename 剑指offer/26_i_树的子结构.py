@@ -10,12 +10,12 @@ class TreeNode:
 
 class Solution:
     def isSubStructure(self, A: TreeNode, B: TreeNode) -> bool:
-        if not B:
+        if not B or not A:
             return False
         
         if not self.isContain(A, B):
             # 以当前A节点为根节点，不包含B的结构，则向A的左右子树分别寻找
-            return self.isContain(A.left) or self.isContain(A.right, B)
+            return self.isSubStructure(A.left, B) or self.isSubStructure(A.right, B)
         else:
             # 以当前A节点为根节点，包含B的结构
             return True
