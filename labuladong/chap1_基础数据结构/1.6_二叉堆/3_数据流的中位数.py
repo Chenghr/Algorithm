@@ -135,6 +135,49 @@ class MedianFinder:
         分别记录小于 0 的部分的数的数量，和大于 100 的部分的数的数量即可。
         当小部分时间，中位数不落在区间 [0,100] 中时，我们在对应的数组中暴力检查即可。
 """
+class MedianFinder:
+    def __init__(self):
+        self.arr = [0] * 101
+        self.leftNum, self.rightNum = dict(), dict()  # 分别维护两个有序序列 
+        self.left, self.mid, self.right = 0, 0, 0  # 分别统计 小于0 0-100 大于 100 的数的数量
+    
+    def addNum(self, num: int) -> None:
+        if 0 <= num <= 100:
+            self.arr[num] += 1
+            self.mid += 1
+        elif num < 0:
+            pass
+            self.left += 1
+        else:
+            pass
+            self.right += 1
+    
+    def find(self, n):
+        """查找第 n 个数"""
+        if n <= self.left:
+            pass
+        elif n <= self.left + self.mid:
+            n -= self.left
+
+            for i in range(101):
+                n -= self.arr[i]
+
+                if n <= 0:
+                    return i
+        else:
+            pass
+
+        return -1
+        
+
+    def findMedian(self) -> float:
+        length = self.left + self.mid + self.right
+        
+        if length % 2 == 0:
+            return (self.find(length/2) + self.find(length/2 + 1)) / 2.0
+        
+        return self.find(length/2 + 1)
+
 obj = MedianFinder()
 obj.addNum(1)
 obj.addNum(2)

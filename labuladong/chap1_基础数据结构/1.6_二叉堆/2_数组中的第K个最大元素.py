@@ -36,7 +36,7 @@ class Solution:
 
         left, right = 0, len(nums)-1
 
-        while left < right:
+        while left <= right:
             # 一趟划分后的基准点下标
             mid = partition(nums, left, right)
 
@@ -64,7 +64,7 @@ class Solution:
             pq.put(num)  # 每个元素都进一次二叉堆
 
             if pq.qsize() > k:
-                drap = pq.get()
+                drop = pq.get()
         
         return pq.get()
 
