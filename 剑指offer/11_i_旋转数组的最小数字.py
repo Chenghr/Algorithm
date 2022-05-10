@@ -16,7 +16,20 @@ class Solution:
     def minArray(self, numbers: List[int]) -> int:
         """
             进行部分有序区间的筛选，采用二分加速查找
+
+            mid 可以和 left 比较或者 right 比较；由于 将部分有序区间搬到数组的末尾，
+            因此可以通过和 right 比较来进行区间的取舍；
         """
         left, right = 0, len(numbers)-1
 
+        while left < right:
+            mid = (left + right) // 2
+
+            if numbers[mid] > numbers[right]:
+                left = mid + 1  # min 在右半区间
+            elif numbers[mid] < numbers[right]:
+                right = mid  # mid 在左半区间，且 mid 可能为最终的最小值
+            elif numbers[mid] == numbers[right]:
+                right -= 1  # 删除一个
         
+        return numbers[left]
