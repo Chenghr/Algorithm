@@ -55,24 +55,38 @@ class Solution:
             先访问的元素是中间节点，要处理的元素也是中间节点
             要访问的元素和要处理的元素顺序是一致的，都是中间节点。
         """
-        if root is None:
+        if not root:
             return []
-        
-        stack = [root]
-        result = []
 
-        while (len(stack) != 0):
+        stack, ans = [root], []
+
+        while stack:
             node = stack.pop()
 
-            result.append(node.val)
-
-            if node.right is not None:
+            ans.append(node.val)
+            if node.right:    # 栈的性质，右节点先入栈
                 stack.append(node.right)
-            if node.left is not None:
+            if node.left:
                 stack.append(node.left)
-
-        return result
+        
+        ans.reverse()
+        return ans
     
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        
+        curNode, stack, ans = root, [], []
+        while curNode or stack:
+            if curNode:
+                stack.append(curNode)
+                curNode = curNode.left
+            else:
+                node = stack.pop()
+                ans.append(node.val)
+                curNode = node.right
+        
+        return ans
 
     def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
         result = []
@@ -118,6 +132,30 @@ class Solution:
                 node = node.right  # 右
         
         return result
+
+    def inorderTraversal_stack_tag(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+
+        stack, ans = [root], []
+
+        while stack:
+            node = stack.pop()
+
+            if node:                            # 非标记节点，压栈
+                if node.right:
+                    stack.append(node.right)
+                
+                stack.append(None)              # 添加标记节点
+                stack.append(node)
+
+                if node.left:
+                    stack.append(node.left)
+            else:                               # 遇到标记节点，处理下个节点
+                node = stack.pop()
+                ans.append(node.val)
+        
+        return ans
 
     def inorderTraversal_stack_tag(self, root: Optional[TreeNode]) -> List[int]:
         """新的处理方法:

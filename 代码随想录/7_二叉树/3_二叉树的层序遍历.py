@@ -14,8 +14,32 @@ class TreeNode:
         self.left = left
         self.right = right
 
+from collections import deque
 
 class Solution:
+    def levelOrder_queue(self, root: TreeNode) -> List[List[int]]:
+        if not root:
+            return []
+
+        que, ans = deque([root]), []
+        while que:
+            width, temp = len(que), []
+
+            for _ in range(width):
+                node = que.popleft()
+
+                temp.append(node.val)
+
+                if node.left:
+                    que.append(node.left)
+                if node.right:
+                    que.append(node.right)
+
+            ans.append(temp)
+        
+        return ans
+
+
     def levelOrder_recur(self, root: TreeNode) -> List[List[int]]:
         if root is None:
             return []
