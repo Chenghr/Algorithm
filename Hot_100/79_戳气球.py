@@ -16,5 +16,13 @@ from typing import List
 class Solution:
     def maxCoins(self, nums: List[int]) -> int:
         """
-            dp[i][j]: 第 i 轮戳破第 j 个气球获得的收益
+            1. dp 定义（保证子问题独立）
+                dp[i][j]: 戳破气球 i 和气球 j 之间（开区间，不包括 i 和 j）的所有气球，可以获得的最高分数。
+            2. 递推公式
+                for k in range(i+1, j):
+                    dp[i][j] = max(dp[i][j], dp[i][k] + dp[k][j] + nums[i]*nums[k]*nums[j])
+            3. 初始化
+                dp[i][i] = 0
+            4. 遍历方向
+                从下向上，从左到右
         """

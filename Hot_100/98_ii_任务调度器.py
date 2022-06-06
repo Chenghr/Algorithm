@@ -19,4 +19,21 @@ class Solution:
         """
             贪心思想考虑；
             影响最短时间的是数量最多的任务；
+            整体的解题步骤如下：
+
+            计算每个任务出现的次数
+            找出出现次数最多的任务，假设出现次数为 x
+            计算至少需要的时间 (x - 1) * (n + 1)，记为 min_time
+            计算出现次数为 x 的任务总数 count，计算最终结果为 min_time + count
+
+            存在特殊情况，当冷却时间短，任务种类很多时，执行任务所需的时间，就是任务的数量。
         """
+        dic = [0] * 26
+        for ch in tasks:
+            dic[ord(ch) - ord('A')] += 1
+        
+        maxNum = max(dic)
+        maxCount = dic.count(maxNum)
+
+        minTime = (maxNum-1)*(n+1) + maxCount
+        return max(minTime, len(tasks))
